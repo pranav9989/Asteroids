@@ -78,3 +78,76 @@ Second quarter avg score: 12.90
 Third quarter avg score: 16.26
 Fourth quarter avg score: 18.26
 Overall improvement: 64.0%
+
+
+🎯 TRAINING COMPLETED!
+============================================================
+
+📊 FINAL STATISTICS:
+  Best Score:        33
+  Best Survival Time: 500
+  Final Epsilon:     0.100
+  Q-table size:      470066 states
+
+📈 LAST 500 EPISODES AVERAGE:
+  Score:  6.75
+  Time:   145.40
+  Reward: 132.15
+  Speed:  0.82
+
+📊 OVERALL AVERAGE:
+  Score:  5.97
+  Time:   142.85
+
+============================================================
+📈 LEARNING PROGRESS SUMMARY
+============================================================
+
+  Score Progression:
+    First quarter:  5.48
+    Second quarter: 5.67
+    Third quarter:  6.11
+    Fourth quarter: 6.61
+
+  Time Progression:
+    First quarter:  145.10
+    Fourth quarter: 144.17
+
+  📈 Overall Score Improvement: 20.5%
+  ✅ Agent IS learning! Scores improving over time.
+
+  💡 Notice: Agent is sacrificing survival time for MORE SCORES!
+     This is EXACTLY what we want - focusing on destroying asteroids!
+
+
+     TRAINING COMPLETED!
+============================================================
+
+📊 FINAL STATISTICS:
+  Best Score: 146
+  Best Survival Time: 1000
+  Final Epsilon: 0.100
+  Q-table size: 910 states
+
+📈 LAST 500 EPISODES AVERAGE:
+  Score: 30.77
+  Time: 289.49
+  Reward: 3009.15
+
+📊 OVERALL AVERAGE:
+  Score: 27.67
+  Time: 258.31
+
+============================================================
+LEARNING PROGRESS SUMMARY
+============================================================
+
+  Score Progression:
+    First quarter:  22.54
+    Second quarter: 30.00
+    Third quarter:  28.00
+    Fourth quarter: 30.14
+
+  📈 Overall Improvement: 33.7%
+  ✅ Agent IS learning! Scores are improving over time.
+============================================================
