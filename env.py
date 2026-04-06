@@ -21,15 +21,17 @@ class AsteroidsEnv:
 
         self.done = False
 
+        # Spawn initial asteroids
+        for _ in range(5):
+            self.spawn_asteroid()
+
         return self.get_state()
 
     def spawn_asteroid(self):
 
         if len(self.asteroids) < self.max_asteroids:
-
             x = random.randint(0, self.width-1)
-
-            self.asteroids.append([x,0])
+            self.asteroids.append([x, 0])
 
     def get_state(self):
 
@@ -56,13 +58,13 @@ class AsteroidsEnv:
 
             for asteroid in self.asteroids:
                 if asteroid[0] == self.ship_x:
-                    reward += 10
-                    self.score += 1  # Increment score when asteroid destroyed
+                    reward += 100  # HIGH reward for destroying asteroid
+                    self.score += 1
                     self.asteroids.remove(asteroid)
                     break
 
-        # spawn new asteroid randomly
-        if random.random() < 0.3:
+        # SPAWN 5 NEW ASTEROIDS AT EACH STEP
+        for _ in range(5):
             self.spawn_asteroid()
 
         # move asteroids
@@ -73,7 +75,7 @@ class AsteroidsEnv:
         for asteroid in self.asteroids:
 
             if asteroid[1] == self.height-1 and asteroid[0] == self.ship_x:
-                reward -= 100
+                reward -= 100  # Penalty for dying
                 self.done = True
 
         # remove off-screen asteroids
@@ -81,6 +83,6 @@ class AsteroidsEnv:
 
         # Track survival time
         self.time_alive += 1
-        reward += 1
+        reward += 0.1  # VERY LOW reward for survival
 
         return self.get_state(), reward, self.done

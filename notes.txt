@@ -1,0 +1,80 @@
+Key Reward Changes:
+Action	                Old Reward	New Reward	    Reason
+Shoot asteroid	        +15	        +50	            Strong incentive to shoot
+Shoot close asteroid	+15	        +75 (+50+25)	Bonus for dangerous asteroids
+Shoot empty	            0	        -5	            Don't waste shots
+Survival per step	    +2	        +0.5	        Much less important now
+Clear all asteroids	    +10	        +20	            Big bonus for screen clear
+Asteroids piling up	    0	        -2 each	        Penalty for ignoring them
+Death	                -50	        -100	        Bigger penalty
+
+ucb
+============================================================
+TRAINING COMPLETED!
+============================================================
+Final Statistics:
+  Best Score: 57
+  Best Survival Time: 500
+  Q-table size: 18934 states
+
+First quarter avg score: 3.94
+Fourth quarter avg score: 10.70
+✅ Agent IS learning! UCB is narrowing down optimal actions.
+
+📊 Training plots saved to 'training_plots.png'
+
+💡 Tip: UCB will spend the first few thousand episodes trying everything, then lock in on high-reward paths!
+
+
+epsilon greedy
+RAINING COMPLETED!
+============================================================
+Final Statistics:
+  Best Score: 50
+  Best Survival Time: 500
+  Final Epsilon: 0.100
+  Q-table size: 16088 states
+
+Average Performance (last 500 episodes):
+  Score: 16.96
+  Time: 234.02
+  Reward: 492.99
+
+Overall Performance:
+  Average Score: 11.80
+  Average Time: 168.70
+
+============================================================
+LEARNING PROGRESS SUMMARY
+============================================================
+First quarter avg score: 8.05
+Second quarter avg score: 9.75
+Third quarter avg score: 13.36
+Fourth quarter avg score: 16.03
+
+biased towrds shooting
+TRAINING COMPLETED!
+============================================================
+Final Statistics:
+  Best Score: 55
+  Best Survival Time: 500
+  Final Epsilon: 0.100
+  Q-table size: 16016 states
+
+Average Performance (last 500 episodes):
+  Score: 17.70
+  Time: 239.89
+  Reward: 448.54
+
+Overall Performance:
+  Average Score: 14.64
+  Average Time: 201.24
+
+============================================================
+LEARNING PROGRESS SUMMARY
+============================================================
+First quarter avg score: 11.14
+Second quarter avg score: 12.90
+Third quarter avg score: 16.26
+Fourth quarter avg score: 18.26
+Overall improvement: 64.0%
