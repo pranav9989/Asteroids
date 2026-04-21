@@ -1,4 +1,4 @@
-# train.py (Updated for constant epsilon)
+# train.py (Updated for constant epsilon with rewards tracking)
 import pickle
 import numpy as np
 from env import AsteroidsEnv
@@ -9,7 +9,7 @@ def train_agent(agent_class, agent_name, episodes=3000, max_steps=1000):
     """Train a specific agent with constant epsilon"""
     
     env = AsteroidsEnv()
-    agent = agent_class(epsilon=0.1)  # Constant 10% exploration
+    agent = agent_class(epsilon=0.15)  # Constant 15% exploration
     
     print(f"\n{'='*60}")
     print(f"TRAINING {agent_name.upper()} AGENT")
@@ -18,11 +18,13 @@ def train_agent(agent_class, agent_name, episodes=3000, max_steps=1000):
     
     score_history = []
     time_history = []
+    reward_history = []  # NEW: Track rewards per episode
     
     start_time = time.time()
     
     for episode in range(episodes):
         state = env.reset()
+        episode_reward = 0  # NEW: Total reward for this episode
         
         # Get initial action
         num_asteroids = len(env.asteroids)
@@ -30,6 +32,7 @@ def train_agent(agent_class, agent_name, episodes=3000, max_steps=1000):
         
         for step in range(max_steps):
             next_state, reward, done = env.step(action)
+            episode_reward += reward  # NEW: Accumulate reward
             
             # Get next action for SARSA
             num_asteroids_next = len(env.asteroids)
@@ -49,15 +52,18 @@ def train_agent(agent_class, agent_name, episodes=3000, max_steps=1000):
         # Store statistics
         score_history.append(env.score)
         time_history.append(env.time_alive)
+        reward_history.append(episode_reward)  # NEW: Store total reward
         
         # Print progress every 500 episodes
         if episode % 500 == 0 and episode > 0:
             avg_score = np.mean(score_history[-500:])
             avg_time = np.mean(time_history[-500:])
+            avg_reward = np.mean(reward_history[-500:])  # NEW: Average reward
             
             print(f"\n📊 Episode: {episode}/{episodes}")
             print(f"  Score: {env.score} (Avg last 500: {avg_score:.2f})")
             print(f"  Time: {env.time_alive} (Avg last 500: {avg_time:.2f})")
+            print(f"  Reward: {episode_reward:.1f} (Avg last 500: {avg_reward:.1f})")  # NEW
             print(f"  Epsilon: {agent.epsilon} (CONSTANT)")
     
     training_time = time.time() - start_time
@@ -75,6 +81,7 @@ def train_agent(agent_class, agent_name, episodes=3000, max_steps=1000):
         'name': agent_name,
         'scores': score_history,
         'times': time_history,
+        'rewards': reward_history,  # NEW: Include rewards in results
         'best_score': max(score_history),
         'best_time': max(time_history),
         'avg_score_last_500': np.mean(score_history[-500:]) if len(score_history) >= 500 else np.mean(score_history),
@@ -108,6 +115,7 @@ def compare_algorithms():
         print(f"{'='*60}")
         print(f"  Best Score: {results['best_score']}")
         print(f"  Avg Score (last 500): {results['avg_score_last_500']:.2f}")
+        print(f"  Avg Reward (last 500): {np.mean(results['rewards'][-500:]):.1f}")  # NEW
         print(f"  Training Time: {results['training_time']:.2f} seconds")
         print(f"  Q-table Size: {results['q_table_size']}")
     
@@ -121,11 +129,11 @@ if __name__ == "__main__":
     print("🎮 ASTEROIDS RL - CONSTANT EPSILON (NO DECAY)")
     print("="*60)
     print("3 Algorithms being trained:")
-    print("  1. Q-Learning (ε=0.1 constant)")
-    print("  2. SARSA (ε=0.1 constant)")
-    print("  3. Double Q-Learning (ε=0.1 constant)")
+    print("  1. Q-Learning (ε=0.15 constant)")
+    print("  2. SARSA (ε=0.15 constant)")
+    print("  3. Double Q-Learning (ε=0.15 constant)")
     print("="*60)
-    print("\n⚠️ No epsilon decay - constant 10% exploration throughout!")
+    print("\n⚠️ No epsilon decay - constant 15% exploration throughout!")
     print("="*60)
     
     results = compare_algorithms()

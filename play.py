@@ -45,7 +45,7 @@ def list_available_agents():
     
     available = []
     print("\n" + "="*60)
-    print("🎮 AVAILABLE AGENTS (Epsilon-Greedy, ε=0.1 constant)")
+    print("🎮 AVAILABLE AGENTS (Epsilon-Greedy, ε=0.15 constant)")
     print("="*60)
     
     for i, agent in enumerate(agents, 1):
@@ -150,7 +150,7 @@ def main():
     print("  • SPACE or R - Restart after game over")
     print("  • ESC - Quit game")
     print("-"*50)
-    print("🤖 Agent uses Epsilon-Greedy (ε=0.1 constant)")
+    print("🤖 Agent uses Epsilon-Greedy (ε=0.15 constant)")
     print("-"*50)
     
     while running:
@@ -241,7 +241,7 @@ def main():
         algo_display = "Q-Learning" if agent_name == "qlearning" else "SARSA" if agent_name == "sarsa" else "Double Q"
         
         algo_text = font.render(f"{algo_display}", True, color)
-        epsilon_text = small_font.render(f"ε-greedy (ε=0.1)", True, color)
+        epsilon_text = small_font.render(f"ε-greedy (ε=0.15)", True, color)
         
         # Current game stats
         score_text = font.render(f"Score: {env.score}", True, YELLOW)
