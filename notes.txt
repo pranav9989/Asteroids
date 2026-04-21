@@ -151,3 +151,52 @@ LEARNING PROGRESS SUMMARY
   📈 Overall Improvement: 33.7%
   ✅ Agent IS learning! Scores are improving over time.
 ============================================================
+
+
+======================================================================
+ALGORITHM COMPARISON RESULTS
+======================================================================
+Algorithm       Best Score   Avg Score    Best Time    Training Time
+----------------------------------------------------------------------
+qlearning       148          30.25        1000         17.1
+sarsa           145          27.19        1000         8.6
+double_q        158          20.80        1000         9.8
+======================================================================
+
+🏆 Best Average Score: QLEARNING (30.25)
+🏆 Best Peak Performance: DOUBLE_Q (158)
+
+
+from q_agent import (
+    QLearningEpsilon, QLearningUCB,
+    SARSARpsilon, SARSACB,
+    DoubleQLearningEpsilon, DoubleQLearningUCB
+)
+
+
+================================================================================
+🏆 FINAL COMPARISON (ALL 3000 EPISODES) - WITH SURVIVAL TIME 🏆
+================================================================================
+
+Rank  Agent                Avg Score  Avg Time   Best Score  Best Time  Train Time
+-----------------------------------------------------------------------------------
+🥇 1  qlearning_ucb        45.44      694.6s     100         1000s      51.7s
+🥈 2  sarsa_ucb            31.45      415.3s     102         1000s      22.9s
+🥉 3  sarsa_epsilon        31.02      249.0s     147         974s       5.7s
+   4  qlearning_epsilon    21.41      252.8s     132         733s       8.6s
+   5  double_q_epsilon     20.06      151.4s     147         882s       7.4s
+   6  double_q_ucb         15.65      155.3s     127         227s       12.3s
+================================================================================
+
+
+
+----------------------------------------------------------------------
+
+Rank  Agent                     Avg Score    Best Score   Time
+----------------------------------------------------------------------
+🥇 1  sarsa_ucb                 45.84        100          39.4      s
+🥈 2  qlearning_ucb             41.05        117          40.5      s
+🥉 3  sarsa_epsilon             30.11        160          6.1       s
+   4  double_q_ucb              28.98        126          21.9      s
+   5  qlearning_epsilon         25.13        139          8.9       s
+   6  double_q_epsilon          22.25        154          7.3       s

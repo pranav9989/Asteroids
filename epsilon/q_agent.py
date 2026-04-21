@@ -1,4 +1,4 @@
-# q_agent_complete.py (Simplified - Only Epsilon, No Decay)
+# q_agent_enhanced.py
 import numpy as np
 from collections import defaultdict
 import random
@@ -9,16 +9,21 @@ class BaseAgent:
     def __init__(self, algorithm="qlearning"):
         self.algorithm = algorithm
         self.actions = 3  # 0=left, 1=right, 2=shoot
-        
-        # Common parameters
-        self.alpha = 0.3
-        self.gamma = 0.95
-        
-        # Epsilon-greedy parameters (NO DECAY!)
-        self.epsilon = 0.1  # Constant exploration
+
+
+class QLearningAgent(BaseAgent):
+    """Standard Q-Learning Agent"""
+    
+    def __init__(self, alpha=0.3, gamma=0.95, epsilon=1.0, epsilon_decay=0.998, epsilon_min=0.1):
+        super().__init__("qlearning")
+        self.q = defaultdict(lambda: np.zeros(3))
+        self.alpha = alpha
+        self.gamma = gamma
+        self.epsilon = epsilon
+        self.epsilon_decay = epsilon_decay
+        self.epsilon_min = epsilon_min
         
     def choose_action(self, state, num_asteroids=0):
-        """Epsilon-greedy action selection"""
         if random.random() < self.epsilon:
             # Exploration with bias
             if num_asteroids > 0:
@@ -33,34 +38,10 @@ class BaseAgent:
                 return random.randint(0, 1)
         
         # Exploitation
-        q_values = self.get_q_values(state).copy()
+        q_values = self.q[state].copy()
         if num_asteroids == 0:
             q_values[2] = -float('inf')
         return np.argmax(q_values)
-    
-    def get_q_values(self, state):
-        """To be overridden by specific agents"""
-        raise NotImplementedError
-    
-    def update_exploration(self):
-        """No decay - epsilon remains constant"""
-        pass
-
-
-# ============ Q-LEARNING AGENT ============
-
-class QLearningAgent(BaseAgent):
-    """Q-Learning with Constant Epsilon"""
-    
-    def __init__(self, alpha=0.3, gamma=0.95, epsilon=0.1):
-        super().__init__("qlearning")
-        self.q = defaultdict(lambda: np.zeros(3))
-        self.alpha = alpha
-        self.gamma = gamma
-        self.epsilon = epsilon  # Constant, no decay!
-        
-    def get_q_values(self, state):
-        return self.q[state]
     
     def learn(self, state, action, reward, next_state, done, next_action=None):
         current_q = self.q[state][action]
@@ -71,22 +52,40 @@ class QLearningAgent(BaseAgent):
             target = reward + self.gamma * np.max(self.q[next_state])
         
         self.q[state][action] += self.alpha * (target - current_q)
+    
+    def decay_epsilon(self):
+        self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
 
-
-# ============ SARSA AGENT ============
 
 class SARSAAgent(BaseAgent):
-    """SARSA with Constant Epsilon"""
+    """SARSA (State-Action-Reward-State-Action) Agent"""
     
-    def __init__(self, alpha=0.3, gamma=0.95, epsilon=0.1):
+    def __init__(self, alpha=0.3, gamma=0.95, epsilon=1.0, epsilon_decay=0.998, epsilon_min=0.1):
         super().__init__("sarsa")
         self.q = defaultdict(lambda: np.zeros(3))
         self.alpha = alpha
         self.gamma = gamma
-        self.epsilon = epsilon  # Constant, no decay!
+        self.epsilon = epsilon
+        self.epsilon_decay = epsilon_decay
+        self.epsilon_min = epsilon_min
         
-    def get_q_values(self, state):
-        return self.q[state]
+    def choose_action(self, state, num_asteroids=0):
+        if random.random() < self.epsilon:
+            if num_asteroids > 0:
+                rand = random.random()
+                if rand < 0.7:
+                    return 2
+                elif rand < 0.85:
+                    return 0
+                else:
+                    return 1
+            else:
+                return random.randint(0, 1)
+        
+        q_values = self.q[state].copy()
+        if num_asteroids == 0:
+            q_values[2] = -float('inf')
+        return np.argmax(q_values)
     
     def learn(self, state, action, reward, next_state, done, next_action=None):
         current_q = self.q[state][action]
@@ -94,28 +93,46 @@ class SARSAAgent(BaseAgent):
         if done:
             target = reward
         else:
-            # SARSA uses the actual next action
+            # SARSA uses the actual next action chosen
             target = reward + self.gamma * self.q[next_state][next_action]
         
         self.q[state][action] += self.alpha * (target - current_q)
+    
+    def decay_epsilon(self):
+        self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
 
-
-# ============ DOUBLE Q-LEARNING AGENT ============
 
 class DoubleQLearningAgent(BaseAgent):
-    """Double Q-Learning with Constant Epsilon"""
+    """Double Q-Learning Agent (reduces overestimation bias)"""
     
-    def __init__(self, alpha=0.3, gamma=0.95, epsilon=0.1):
+    def __init__(self, alpha=0.3, gamma=0.95, epsilon=1.0, epsilon_decay=0.998, epsilon_min=0.1):
         super().__init__("double_q")
         self.q1 = defaultdict(lambda: np.zeros(3))
         self.q2 = defaultdict(lambda: np.zeros(3))
         self.alpha = alpha
         self.gamma = gamma
-        self.epsilon = epsilon  # Constant, no decay!
+        self.epsilon = epsilon
+        self.epsilon_decay = epsilon_decay
+        self.epsilon_min = epsilon_min
         
-    def get_q_values(self, state):
-        # Return average of both Q-tables for action selection
-        return (self.q1[state] + self.q2[state]) / 2
+    def choose_action(self, state, num_asteroids=0):
+        if random.random() < self.epsilon:
+            if num_asteroids > 0:
+                rand = random.random()
+                if rand < 0.7:
+                    return 2
+                elif rand < 0.85:
+                    return 0
+                else:
+                    return 1
+            else:
+                return random.randint(0, 1)
+        
+        # Use average of both Q-tables for action selection
+        q_values = (self.q1[state] + self.q2[state]) / 2
+        if num_asteroids == 0:
+            q_values[2] = -float('inf')
+        return np.argmax(q_values)
     
     def learn(self, state, action, reward, next_state, done, next_action=None):
         if random.random() < 0.5:
@@ -137,7 +154,9 @@ class DoubleQLearningAgent(BaseAgent):
                 target = reward + self.gamma * self.q1[next_state][best_action]
             self.q2[state][action] += self.alpha * (target - current_q)
     
+    def decay_epsilon(self):
+        self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
+    
     def get_q_table(self):
         """Return average Q-table for saving"""
-        return {state: (self.q1[state] + self.q2[state]) / 2 
-                for state in set(self.q1.keys()) | set(self.q2.keys())}
+        return {state: (self.q1[state] + self.q2[state]) / 2 for state in set(self.q1.keys()) | set(self.q2.keys())}
